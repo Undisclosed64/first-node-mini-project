@@ -1,57 +1,23 @@
-const url = require('url');
-const fs = require("fs");
-const http = require("http");
+const express = require('express')
+const app = express();
+const port = 3000;
 
-const port = process.env.PORT || 8000;
-
-//create an http server
-const server = http.createServer((req,res) => {
-    const parseUrl = url.parse(req.url,true);
-    const fileToShow = '.' + parseUrl.pathname + '.html';
-
-//main if else block
-if(fileToShow === './.html'){
-    fs.readFile('./index.html',(error,showHome)=>{
-if(error){
-    console.log(error)
-} else {
-    res.statusCode = 200;
+app.get('/', (req, res) => {
     res.setHeader('Content-Type','text/html');
-    res.write(showHome);
-    res.end();
-}
-    })
+  res.send('<h1>Hi,welcome to the home page!</h1>')
+});
 
-} else {
-    fs.readFile(fileToShow,(err,data) => {
-        if(err){
-        //open the 404 page
-    fs.readFile('./404.html',(err,content) => {
-        if (err) {
-            console.error(err);
-            res.setHeader('Content-Type','text/html');
-            res.write('Something went wrong!');
-            res.end();
-          } else {
-              res.statusCode = 200;
-          res.setHeader('Content-Type','text/html');
-          res.write(content);
-          res.end();
-          }
-    })
+app.get('/about',(req,res) => {
+    res.setHeader('Content-Type','text/html');
+    res.send('<h1>This is about page!</h1>')
+})
 
 
-//if there's no err,open the respective file
-        } else {
-            res.statusCode = 200;
-            res.setHeader('Content-Type','text/html');
-            res.write(data);
-            res.end()
-        }
-    })
-}
- })
+app.get('/contact-me',(req,res) => {
+    res.setHeader('Content-Type','text/html');
+    res.send('<h1>This is contact me page!</h1>')
+})
 
-server.listen(port,()=> {
-    console.log(`server running at port ${port}`);
+app.listen(port, () => {
+  console.log(`Sever listening on port ${port}`)
 });
